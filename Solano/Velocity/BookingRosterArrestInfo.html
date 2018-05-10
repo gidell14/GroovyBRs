@@ -1,0 +1,40 @@
+#set ($d = '$')
+#set ($dataSets = [])
+
+#set ($success = $dataSets.add({'rows': $object.associatedParty.case.collect("subCases[status == 'OPEN']").orderBy('id desc'),
+'noRows': 'No supervision data',
+'headers': {'Supervision Officer': '200px', 'Supervision Type': '200px', 'Active From': '200px'},
+'fields': ['$row.sup_caseload.name', '$lookupListTool.getLabel("SUB_CASE_TYPE", $row.subCaseType)', 'filingDate']}))
+
+#set ($success = $dataSets.add({'rows':$object.collect('arrestCharges').orderBy('id desc'),
+'noRows': 'No Charge data',
+'headers':{'Charge Date': '60px', 'OTN': '60px', 'Case Number': '150px', 'Counts': '20px', 'Description': '250px', 'Statute': '250px', 'Charge Level': '150px',
+'Charge Type': '150px','Judge': '90px', 'Bail Amount': '60px'},
+'fields':['chargeDate', 'stateOTN', 'caseNumber', 'chargeCount', 'description', 'statuteText', 'chargeLevel', 'chargeType', 'judge', 'bailAmount']}))
+
+
+<span title='Details'>    
+#foreach($set in $dataSets)
+
+<table class="resultstable "><thead><tr >
+#foreach($h in $set['headers'].entrySet())<th #if(!$h.value.isEmpty())style="width:${h.value}"#end>$h.key</th>#end
+</tr></thead><tbody>
+#if($set['rows'].size() == 0)<tr><td colspan="25">$set['noRows']</td></tr>#else
+#foreach($row in $set['rows'])
+<tr>
+#foreach($f in $set['fields'])
+#if($f.contains('$row'))
+#set($varName = $f)
+#else
+#set($varName = "${d}row.${f}")
+#end
+ <td style="vertical-align: top;">#evaluate($varName)</td>
+#end
+</tr>
+#end
+#end
+</tbody></table>
+#end
+</span>
+
+
