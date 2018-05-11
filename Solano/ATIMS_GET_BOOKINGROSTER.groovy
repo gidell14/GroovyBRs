@@ -230,7 +230,7 @@ ArrestCharge GetChargeEntity(row){
     logger.debug("ArrestCharge created")
     charge.chargeCount = row.Count.toInteger()
     charge.chargeLevel = row.Charge //todo: need to map values
-    charge.chargeDegree = row.Charge //todo: need to map values
+    charge.chargeDegree = row.Charge //todo: need to map values  This is actually STATUTE_CATEGORY
     if(statute){
         charge.statute = statute
         charge.statuteSectionNumber = row.Section
